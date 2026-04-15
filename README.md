@@ -121,7 +121,7 @@ npm run db:migrate     # apply drizzle migrations
 
 ## Docker Compose (Production Baseline)
 `docker-compose-prod.yml` includes:
-- `app` service built from local `Dockerfile` (runs `node dist/main`).
+- `app` service built from local `Dockerfile` (runs `node dist/src/main.js`).
 - `postgres` service using `postgres:16-alpine`.
 
 Important defaults:

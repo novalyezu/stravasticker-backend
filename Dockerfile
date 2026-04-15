@@ -21,4 +21,4 @@ COPY --chown=node:node --from=builder /app/dist ./dist
 COPY --chown=node:node package.json package-lock.json ./
 USER node
 EXPOSE 3333
-CMD ["node", "dist/main"]
+CMD ["node", "dist/src/main.js"]

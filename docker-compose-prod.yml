@@ -69,7 +69,7 @@ services:
       - "traefik.http.services.stravasticker-backend.loadbalancer.server.port=3333"
     networks:
       - proxy
-    command: sh -c "node dist/main"
+    command: sh -c "node dist/src/main.js"
     ports:
       - "${APP_BIND_IP:-0.0.0.0}:${PORT:-3333}:${PORT:-3333}"
     security_opt:
