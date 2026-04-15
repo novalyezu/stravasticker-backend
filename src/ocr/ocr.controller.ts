@@ -1,4 +1,10 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import type { AuthenticatedUser } from '../common/types/authenticated-user.type';
@@ -6,12 +12,16 @@ import { ok } from '../common/utils/response';
 import { ExtractOcrDto } from './dto/extract-ocr.dto';
 import { OcrService } from './ocr.service';
 
+@ApiTags('ocr')
+@ApiBearerAuth()
 @Controller('ocr')
 @UseGuards(JwtAuthGuard)
 export class OcrController {
   constructor(private readonly ocrService: OcrService) {}
 
   @Post('extract')
+  @ApiOperation({ summary: 'Run OCR extraction for an uploaded image' })
+  @ApiOkResponse({ description: 'Normalized OCR result payload' })
   async extract(
     @CurrentUser() user: AuthenticatedUser,
     @Body() body: ExtractOcrDto,
