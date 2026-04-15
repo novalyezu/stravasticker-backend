@@ -1,0 +1,15 @@
+.git
+.gitignore
+.codex
+.env
+.env.*
+!.env.example
+node_modules
+dist
+coverage
+npm-debug.log*
+docker-compose*.yml
+README.md
+docs
+test
+ctrl-spark-aws-ec2.pem

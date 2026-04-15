@@ -119,6 +119,22 @@ npm run db:generate    # generate drizzle migration
 npm run db:migrate     # apply drizzle migrations
 ```
 
+## Docker Compose (Production Baseline)
+`docker-compose-prod.yml` includes:
+- `app` service built from local `Dockerfile` (runs `node dist/main`).
+- `postgres` service using `postgres:16-alpine`.
+
+Important defaults:
+- Postgres is only exposed on loopback: `127.0.0.1:${POSTGRES_PORT:-5432}`.
+- App remains exposed by `APP_BIND_IP` (default `0.0.0.0`).
+
+Run:
+
+```bash
+docker compose -f docker-compose-prod.yml --profile tools run --rm migrate
+docker compose -f docker-compose-prod.yml up -d --build
+```
+
 ## Manual QA (MVP)
 Minimum checks before opening PR:
 - Google sign-in works.
