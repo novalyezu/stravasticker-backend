@@ -21,7 +21,7 @@ services:
       - "traefik.http.routers.dashboard.tls=true"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.middlewares=dashboard-auth,noindex"
-      - "traefik.http.middlewares.dashboard-auth.basicauth.users=admin-ctrlspark:$$apr1$6uzN732G$5oh6y/XGwFN6lnkOzdXl.1"
+      - "traefik.http.middlewares.dashboard-auth.basicauth.users=${TRAEFIK_DASHBOARD_AUTH:?TRAEFIK_DASHBOARD_AUTH is required}"
       - "traefik.http.middlewares.noindex.headers.customResponseHeaders.X-Robots-Tag=noindex, nofollow"
     networks:
       - proxy
