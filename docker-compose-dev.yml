@@ -1,0 +1,66 @@
+services:
+  stravasticker-backend:
+    image: node:20-alpine
+    container_name: stravasticker-backend-dev
+    working_dir: /app
+    restart: unless-stopped
+    init: true
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+      PORT: ${PORT:-3333}
+      DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-stravasticker}
+      DB_POOL_MAX: ${DB_POOL_MAX:-10}
+    command: sh -c "if [ ! -f node_modules/.package-lock.json ]; then npm ci; fi && npm run start:dev"
+    ports:
+      - "${APP_BIND_IP:-0.0.0.0}:${PORT:-3333}:${PORT:-3333}"
+    volumes:
+      - .:/app
+      - dev_node_modules:/app/node_modules
+
+  migrate:
+    image: node:20-alpine
+    container_name: stravasticker-migrate-dev
+    profiles: ["tools"]
+    working_dir: /app
+    restart: "no"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-stravasticker}
+    command: sh -c "if [ ! -f node_modules/.package-lock.json ]; then npm ci; fi && npm run db:migrate"
+    volumes:
+      - .:/app
+      - dev_node_modules:/app/node_modules
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: stravasticker-postgres-dev
+    restart: unless-stopped
+    init: true
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-stravasticker}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT_DEV:-5433}:5432"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-stravasticker}
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+
+volumes:
+  postgres_data_dev:
+  dev_node_modules:

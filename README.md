@@ -135,6 +135,20 @@ docker compose -f docker-compose-prod.yml --profile tools run --rm migrate
 docker compose -f docker-compose-prod.yml up -d --build
 ```
 
+## Docker Compose (Development)
+`docker-compose-dev.yml` includes:
+- `stravasticker-backend` service running `npm run start:dev` with bind mount.
+- `postgres` service using `postgres:16-alpine`.
+- optional `migrate` one-off service (profile: `tools`).
+- default host DB port is `5433` (`POSTGRES_PORT_DEV`) to avoid conflicts with local `5432`.
+
+Run:
+
+```bash
+docker compose -f docker-compose-dev.yml --profile tools run --rm migrate
+docker compose -f docker-compose-dev.yml up -d
+```
+
 ## Manual QA (MVP)
 Minimum checks before opening PR:
 - Google sign-in works.
