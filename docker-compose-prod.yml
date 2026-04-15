@@ -107,6 +107,8 @@ services:
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-stravasticker}
     command: sh -c "npm run db:migrate"
+    networks:
+      - proxy
 
   postgres:
     image: postgres:16-alpine
@@ -131,6 +133,8 @@ services:
       options:
         max-size: "10m"
         max-file: "5"
+    networks:
+      - proxy
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
